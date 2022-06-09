@@ -1,10 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .config import settings
-
-from .database import SessionLocal
-
 from .database import Base, engine
 
 from .routes import proyecto_routes
