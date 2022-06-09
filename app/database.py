@@ -5,7 +5,6 @@ from sqlalchemy.orm import sessionmaker
 from .config import settings
 
 SQLALCHEMY_DATABASE_URL = "postgresql://{}:{}@{}/{}".format(settings.database_user,settings.database_password, settings.database_ip, settings.database_name)
-print(SQLALCHEMY_DATABASE_URL)
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     pool_pre_ping=True,
