@@ -5,7 +5,7 @@ API en desarrollo. La versión más actualizada estará en el branch `proyectos`
 
 Los requisitos están especificados en el archivo `requeriments.txt`. Para instalarlos se requiere ejecutar el comando
 ```cmd
-pip install requeriments.txt
+pip install -r requeriments.txt
 ```
 
 # Levantar la API
