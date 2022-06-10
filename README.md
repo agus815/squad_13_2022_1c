@@ -1,12 +1,16 @@
-# Squad 13
-Este es el repositorio del Squad 13 de la materia Análisis de la Información de FIUBA. Corresponde al primer cuatrimestre de 2022.
+# Módulo de proyectos
+API en desarrollo. La versión más actualizada estará en el branch `proyectos`
 
-# Integrantes
-- Juan Ignacio Brugger, padrón 103583
-- Hugo Huzan, padrón 67910
-- Lucía Lourengo Caridade, padrón 104880
-- Enrique Morici, padrón 107115
-- Agustina Doly Su, padrón 105708
+# Requesistos
 
-# Objetivo
-El objetivo del proyecto consiste en implementar una versión MVP del nuevo software para manejar la gestión de la empresa PSA.
+Los requisitos están especificados en el archivo `requeriments.txt`. Para instalarlos se requiere ejecutar el comando
+```cmd
+pip install requeriments.txt
+```
+
+# Levantar la API
+Para levantar la API se debe ejecutar entrar a la carpeta del proyecto y ejecutar el siguiente comando
+
+```
+uvicorn app.main:app --reload
+```
