@@ -27,4 +27,21 @@ def read_proyectos(db: Session = Depends(get_db)):
 @router.get("/{codigo}", response_model=Proyecto)
 def read_proyecto(codigo: int, db: Session = Depends(get_db)):
     proyecto = get_proyecto(codigo, db)
+    if not proyecto :
+        raise HTTPException(status_code=404, detail="El proyecto no existe")
     return proyecto
+
+@router.post("/create", response_model=Proyecto)
+def create_proyecto(proyecto: ProyectoCreate, db: Session = Depends(get_db)):
+    proyecto_db = get_proyecto_by_nombre(proyecto.nombre, db)
+    if proyecto_db :
+        raise HTTPException(status_code=400, detail="El proyecto ya estaba registrado")
+    return save_proyecto(proyecto, db)
+
+@router.post("/update", response_model=Proyecto)
+def update_proyecto_api(proyecto: ProyectoUpdate, db: Session = Depends(get_db)):
+    return update_proyecto(proyecto, db)
+
+@router.post("/delete")
+def remove_proyecto(proyecto: ProyectoDelete, db: Session = Depends(get_db)):
+    return delete_proyecto(proyecto.codigo, db)

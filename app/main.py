@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .database import Base, engine
 
 from .routes import proyecto_routes
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
