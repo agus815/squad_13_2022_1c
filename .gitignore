@@ -1,3 +1,4 @@
 # Cache de python
 __pycache__/
 *.py[cod]
+.idea
