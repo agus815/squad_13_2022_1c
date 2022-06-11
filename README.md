@@ -1,7 +1,7 @@
 # Módulo de proyectos
 API en desarrollo. La versión más actualizada estará en el branch `proyectos`
 
-# Requesistos
+# Requisitos
 
 Los requisitos están especificados en el archivo `requeriments.txt`. Para instalarlos se requiere ejecutar el comando
 ```cmd
