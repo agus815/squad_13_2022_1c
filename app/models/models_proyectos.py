@@ -8,3 +8,8 @@ class Proyecto(Base):
     nombre = Column(String(50))
     tipo = Column(String(50))
     fecha_limite = Column(Date)
+
+class RecursoProyecto(Base):
+    __tablename__='proyectos_recursos'
+    codigo_proyecto = Column(Integer, primary_key=True, nullable=False)
+    legajo_recurso = Column(Integer, nullable=False)

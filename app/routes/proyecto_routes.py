@@ -21,15 +21,11 @@ def get_db():
 
 @router.get("/", response_model=List[Proyecto])
 def read_proyectos(db: Session = Depends(get_db)):
-    proyectos = get_proyectos(db)
-    return proyectos
+    return get_proyectos(db)
 
 @router.get("/{codigo}", response_model=Proyecto)
 def read_proyecto(codigo: int, db: Session = Depends(get_db)):
-    proyecto = get_proyecto(codigo, db)
-    if not proyecto :
-        raise HTTPException(status_code=404, detail="El proyecto no existe")
-    return proyecto
+    return get_proyecto(codigo, db)
 
 @router.post("/create", response_model=Proyecto)
 def create_proyecto(proyecto: ProyectoCreate, db: Session = Depends(get_db)):
