@@ -1,12 +1,13 @@
 from asyncio.log import logger
 from typing import List
 from app.models.models_proyectos import Proyecto, RecursoProyecto
+from app.models.models_tareas import Tarea
 
 from sqlalchemy.orm import Session
 
 from fastapi import HTTPException
 
-from app.schemas.schemas_proyectos import ProyectoCreate, ProyectoDelete, ProyectoUpdate
+from app.schemas.schemas_proyectos import ProyectoCreate, ProyectoUpdate
 
 
 # ------------------------- GET FUNCTIONS ------------------------------------------
@@ -108,6 +109,7 @@ def update_recursos(proyecto_new: ProyectoUpdate, db: Session):
 def delete_proyecto(codigo_proyecto: int, db: Session):
     try:
         delete_recursos(codigo_proyecto, db)
+        delete_tareas(codigo_proyecto, db)
         proyecto = db.query(Proyecto).filter(Proyecto.codigo == codigo_proyecto).first()
         db.delete(proyecto)
         db.commit()
@@ -128,3 +130,15 @@ def delete_recursos(codigo_proyecto: int, db: Session) -> None:
         db.rollback()
         logger.error("Error al eliminar los recursos del proyecto: " + str(e))
         raise HTTPException(status_code=500, detail="Problemas al eliminar los recursos del proyecto")
+
+
+def delete_tareas(codigo_proyecto: int, db: Session) -> None:
+    try:
+        tareas = db.query(Tarea).filter(Tarea.codigo_proyecto == codigo_proyecto).all()
+        for tarea in tareas:
+            db.delete(tarea)
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        logger.error("Error al eliminar las tareas del proyecto: " + str(e))
+        raise HTTPException(status_code=500, detail="Problemas al eliminar las tareas del proyecto")
