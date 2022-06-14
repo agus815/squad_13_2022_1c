@@ -1,10 +1,10 @@
 from datetime import date
-from typing import List, Optional
+from typing import Optional
 from pydantic import BaseModel, Field
 
 
 class TareaRecurso(BaseModel):
-    codigo_proyecto: int = Field(..., title="Código de la tarea al que el recurso fue asignado")
+    codigo_tarea: int = Field(..., title="Código de la tarea al que el recurso fue asignado")
     legajo_recurso: int = Field(..., title="Número de legajo del recurso asigando")
 
 
@@ -17,7 +17,7 @@ class TareaBase(BaseModel):
     prioridad: str = Field(..., title="Prioridad de la tarea. Puede ser alta, media o baja")
     fecha_inicio: date = Field(date.today(), title="Fecha donde se inicia la tarea")
     fecha_fin: date = Field(date.today(), title="Fecha estimada para finalizar la tarea")
-    recursos: Optional[List[int]] = Field([], title="Número de legajo del recurso asignado")
+    recurso: Optional[int] = Field(..., title="Número de legajo del recurso asignado")
 
 
 class TareaDelete(BaseModel):
