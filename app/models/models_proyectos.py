@@ -13,5 +13,5 @@ class Proyecto(Base):
 
 class RecursoProyecto(Base):
     __tablename__ = 'proyectos_recursos'
-    codigo_proyecto = Column(Integer, primary_key=True, nullable=False)
-    legajo_recurso = Column(Integer, nullable=False)
+    codigo_proyecto = Column(Integer, primary_key=True)
+    legajo_recurso = Column(Integer, primary_key=True)

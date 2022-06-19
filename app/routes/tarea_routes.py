@@ -23,21 +23,21 @@ def read_tareas(codigo_proyecto: int, db: Session = Depends(get_db)):
     return get_tareas_from_proyecto(codigo_proyecto, db)
 
 
-@router.get("/{codigo_proyecto}/{codigo}", response_model=Tarea)
+@router.get("/{codigo}", response_model=Tarea)
 def read_tarea(codigo: int, db: Session = Depends(get_db)):
     return get_tarea(codigo, db)
 
 
-@router.post("/{codigo_proyecto}/create", response_model=Tarea)
+@router.post("/create", response_model=Tarea)
 def create_tarea(tarea: TareaCreate, db: Session = Depends(get_db)):
     return save_tarea(tarea, db)
 
 
-@router.post("/{codigo_proyecto}/update", response_model=Tarea)
+@router.post("/update", response_model=Tarea)
 def update_tarea_api(tarea: TareaUpdate, db: Session = Depends(get_db)):
     return update_tarea(tarea, db)
 
 
-@router.post("/{codigo_proyecto}/delete")
+@router.post("/delete")
 def remove_tarea(tarea: TareaDelete, db: Session = Depends(get_db)):
     return delete_tarea(tarea.codigo, db)

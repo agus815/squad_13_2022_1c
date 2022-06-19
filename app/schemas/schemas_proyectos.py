@@ -9,9 +9,9 @@ class ProyectoRecurso(BaseModel):
 
 
 class ProyectoBase(BaseModel):
-    nombre: str = Field(..., title="Nombre del proyecto")
-    tipo: str = Field(..., title="Tipo del proyecto. Puede ser implementación o desarrollo")
-    fecha_limite: date = Field(date.today(), title="Fecha límite para completar el proyecto")
+    nombre: Optional[str] = Field('', title="Nombre del proyecto")
+    tipo: Optional[str] = Field('', title="Tipo del proyecto. Puede ser implementación o desarrollo")
+    fecha_limite: Optional[date] = Field(date.today(), title="Fecha límite para completar el proyecto")
     recursos: Optional[List[int]] = Field([], title="Números de legajo de los recursos asignados")
 
 
@@ -24,7 +24,9 @@ class ProyectoUpdate(ProyectoBase):
 
 
 class ProyectoCreate(ProyectoBase):
-    pass
+    nombre: str = Field(..., title="Nombre del proyecto")
+    tipo: str = Field(..., title="Tipo del proyecto. Puede ser implementación o desarrollo")
+    fecha_limite: date = Field(date.today(), title="Fecha límite para completar el proyecto")
 
 
 class Proyecto(ProyectoBase):

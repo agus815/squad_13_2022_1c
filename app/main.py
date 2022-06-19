@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .database import Base, engine
 
-from .routes import proyecto_routes
+from .routes import proyecto_routes, tarea_routes
 
 Base.metadata.create_all(bind=engine)
 
@@ -18,3 +18,4 @@ app.add_middleware(
 )
 
 app.include_router(proyecto_routes.router, prefix="/proyectos", tags=["proyectos"])
+app.include_router(tarea_routes.router, prefix="/tareas", tags=["tareas"])

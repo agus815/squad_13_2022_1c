@@ -35,16 +35,16 @@ def get_proyecto_by_nombre(nombre: str, db: Session) -> Proyecto:
     return db.query(Proyecto).filter(Proyecto.nombre == nombre).first()
 
 
-def get_recursos_by_proyecto(codigo_proyecto: int, db: Session) -> List[RecursoProyecto]:
-    return db.query(RecursoProyecto).filter(RecursoProyecto.codigo_proyecto == codigo_proyecto).all()
-
-
 def get_legajos_recursos(codigo_proyecto: int, db: Session) -> List[int]:
     legajos = []
     recursos = get_recursos_by_proyecto(codigo_proyecto, db)
     for recurso in recursos:
         legajos.append(recurso.legajo_recurso)
     return legajos
+
+def get_recursos_by_proyecto(proyecto_codigo: int, db: Session) -> List[RecursoProyecto]:
+    recursos = db.query(RecursoProyecto).filter(RecursoProyecto.codigo_proyecto == proyecto_codigo).all()
+    return recursos
 
 
 # ------------------------- SAVE FUNCTIONS ------------------------------------------
@@ -56,8 +56,9 @@ def save_recursos(recursos: List[int], codigo_proyecto: int, db: Session) -> Lis
             legajo_recurso=legajo
         )
         db.add(db_recurso)
+        db.commit()
+        db.refresh(db_recurso)
         legajos.append(legajo)
-    db.commit()
     return legajos
 
 
@@ -70,6 +71,7 @@ def save_proyecto(proyecto: ProyectoCreate, db: Session) -> Proyecto:
     try:
         db.add(db_proyecto)
         db.commit()
+        db.refresh(db_proyecto)
         db_proyecto.recursos = save_recursos(proyecto.recursos, db_proyecto.codigo, db)
         return db_proyecto
     except Exception as e:
@@ -84,15 +86,16 @@ def update_proyecto(proyecto_new: ProyectoUpdate, db: Session) -> Proyecto:
         raise HTTPException(status_code=404, detail="El proyecto no existe")
 
     proyecto_db = get_proyecto_by_nombre(proyecto_new.nombre, db)
-    if proyecto_db:
+    if proyecto_db and proyecto_db.codigo != proyecto_new.codigo:
         raise HTTPException(status_code=400, detail="El nombre del proyecto ya existe")
 
     try:
-        proyecto_old.nombre = proyecto_new.nombre
-        proyecto_old.tipo = proyecto_new.tipo
-        proyecto_old.fecha_limite = proyecto_new.fecha_limite
+        if proyecto_new.nombre: proyecto_old.nombre = proyecto_new.nombre
+        if proyecto_new.tipo: proyecto_old.tipo = proyecto_new.tipo
+        if proyecto_new.fecha_limite: proyecto_old.fecha_limite = proyecto_new.fecha_limite
         db.commit()
-        proyecto_old.recursos = update_recursos(proyecto_new, db)
+        db.refresh(proyecto_old)
+        if proyecto_new.recursos: proyecto_old.recursos = update_recursos(proyecto_new, db)
         return proyecto_old
     except Exception as e:
         logger.error("Error al actualizar el proyecto: " + str(e))
@@ -113,6 +116,7 @@ def delete_proyecto(codigo_proyecto: int, db: Session):
         proyecto = db.query(Proyecto).filter(Proyecto.codigo == codigo_proyecto).first()
         db.delete(proyecto)
         db.commit()
+        db.refresh
         return {"transaction": "ok"}
     except Exception as e:
         db.rollback()
