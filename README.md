@@ -1,5 +1,5 @@
 # Módulo de proyectos
-API en desarrollo. La versión más actualizada estará en el branch `proyectos`
+API en desarrollo. La versión más actualizada estará en el branch `develop`
 
 # Requisitos
 
