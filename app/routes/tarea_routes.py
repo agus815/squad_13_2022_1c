@@ -18,14 +18,17 @@ def get_db():
         db.close()
 
 
-@router.get("/{codigo_proyecto}", response_model=List[Tarea])
-def read_tareas(codigo_proyecto: int, db: Session = Depends(get_db)):
-    return get_tareas_from_proyecto(codigo_proyecto, db)
-
+@router.get("/", response_model=List[Tarea])
+def read_tareas(db: Session = Depends(get_db)):
+    return get_tareas(db)
 
 @router.get("/{codigo}", response_model=Tarea)
 def read_tarea(codigo: int, db: Session = Depends(get_db)):
     return get_tarea(codigo, db)
+
+@router.get("/proyecto/{codigo_proyecto}", response_model=List[Tarea])
+def read_tareas_by_proyecto(codigo_proyecto: int, db: Session = Depends(get_db)):
+    return get_tareas_from_proyecto(codigo_proyecto, db)
 
 
 @router.post("/create", response_model=Tarea)

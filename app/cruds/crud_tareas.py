@@ -10,12 +10,12 @@ from app.schemas.schemas_tareas import TareaCreate, TareaUpdate
 
 
 # ------------------------- GET FUNCTIONS ------------------------------------------
-"""def get_tareas(db: Session) -> List[Tarea]:
+def get_tareas(db: Session) -> List[Tarea]:
     try:
         tareas = db.query(Tarea).all()
         return tareas
     except Exception:
-        raise HTTPException(status_code=500, detail="Problemas al obtener las tareas")"""
+        raise HTTPException(status_code=500, detail="Problemas al obtener las tareas")
 
 
 def get_tareas_from_proyecto(codigo_proyecto: int, db: Session) -> List[Tarea]:
