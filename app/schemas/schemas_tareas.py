@@ -17,7 +17,7 @@ class TareaBase(BaseModel):
     prioridad: str = Field(..., title="Prioridad de la tarea. Puede ser alta, media o baja")
     fecha_inicio: date = Field(date.today(), title="Fecha donde se inicia la tarea")
     fecha_fin: date = Field(date.today(), title="Fecha estimada para finalizar la tarea")
-    recurso: Optional[int] = Field(..., title="Número de legajo del recurso asignado")
+    recurso: Optional[int] = Field(None, title="Número de legajo del recurso asignado")
 
 
 class TareaDelete(BaseModel):

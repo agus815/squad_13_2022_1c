@@ -1,6 +1,7 @@
 from datetime import date
 from typing import List, Optional
 from pydantic import BaseModel, Field
+from .schemas_tareas import Tarea
 
 
 class ProyectoRecurso(BaseModel):
@@ -26,10 +27,11 @@ class ProyectoUpdate(ProyectoBase):
 class ProyectoCreate(ProyectoBase):
     nombre: str = Field(..., title="Nombre del proyecto")
     tipo: str = Field(..., title="Tipo del proyecto. Puede ser implementación o desarrollo")
-    fecha_limite: date = Field(date.today(), title="Fecha límite para completar el proyecto")
+    fecha_limite: date = Field(..., title="Fecha límite para completar el proyecto")
 
 
 class Proyecto(ProyectoBase):
+    tareas: Optional[List[Tarea]] = Field([], title="Tareas asignadas al proyecto")
     codigo: int = Field(..., title="Codigo del proyecto en la DB")
 
     class Config:

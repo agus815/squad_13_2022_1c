@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import Column, Integer, String, Date, ForeignKey
 
 from app.database import Base
 
@@ -6,7 +6,7 @@ from app.database import Base
 class Tarea(Base):
     __tablename__ = 'tareas'
     codigo = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-    codigo_proyecto = Column(Integer, primary_key=True, nullable=False)
+    codigo_proyecto = Column(Integer, ForeignKey('proyectos.codigo'))
     nombre = Column(String(50))
     descripcion = Column(String(50))
     estado = Column(String(50))

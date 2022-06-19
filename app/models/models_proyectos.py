@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy.orm import relationship
 
 from app.database import Base
 
@@ -9,6 +10,7 @@ class Proyecto(Base):
     nombre = Column(String(50))
     tipo = Column(String(50))
     fecha_limite = Column(Date)
+    tareas = relationship("Tarea", cascade="all,delete,delete-orphan")
 
 
 class RecursoProyecto(Base):
