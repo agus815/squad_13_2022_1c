@@ -12,9 +12,3 @@ class Proyecto(Base):
     estado = Column(String(50))
     fecha_limite = Column(Date)
     tareas = relationship("Tarea", cascade="all,delete,delete-orphan")
-
-
-class RecursoProyecto(Base):
-    __tablename__ = 'proyectos_recursos'
-    codigo_proyecto = Column(Integer, primary_key=True)
-    legajo_recurso = Column(Integer, primary_key=True)

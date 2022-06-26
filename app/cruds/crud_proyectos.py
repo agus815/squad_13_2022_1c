@@ -1,6 +1,6 @@
 from asyncio.log import logger
 from typing import List
-from app.models.models_proyectos import Proyecto, RecursoProyecto
+from app.models.models_proyectos import Proyecto
 
 from sqlalchemy.orm import Session
 
@@ -13,8 +13,6 @@ from app.schemas.schemas_proyectos import ProyectoCreate, ProyectoUpdate
 def get_proyectos(db: Session) -> List[Proyecto]:
     try:
         proyectos = db.query(Proyecto).all()
-        for proyecto in proyectos:
-            proyecto.recursos = get_legajos_recursos(proyecto.codigo, db)
         return proyectos
     except Exception as e:
         logger.error("Error al obtener los proyectos: " + str(e))
@@ -25,8 +23,6 @@ def get_proyecto(codigo: int, db: Session) -> Proyecto:
     proyecto = db.query(Proyecto).filter(Proyecto.codigo == codigo).first()
     if not proyecto:
         raise HTTPException(status_code=404, detail="El proyecto no existe")
-        
-    proyecto.recursos = get_legajos_recursos(proyecto.codigo, db)
     return proyecto
 
 
@@ -34,34 +30,7 @@ def get_proyecto_by_nombre(nombre: str, db: Session) -> Proyecto:
     return db.query(Proyecto).filter(Proyecto.nombre == nombre).first()
 
 
-def get_legajos_recursos(codigo_proyecto: int, db: Session) -> List[int]:
-    legajos = []
-    recursos = get_recursos_by_proyecto(codigo_proyecto, db)
-    for recurso in recursos:
-        legajos.append(recurso.legajo_recurso)
-    return legajos
-
-
-def get_recursos_by_proyecto(proyecto_codigo: int, db: Session) -> List[RecursoProyecto]:
-    recursos = db.query(RecursoProyecto).filter(RecursoProyecto.codigo_proyecto == proyecto_codigo).all()
-    return recursos
-
-
 # ------------------------- SAVE FUNCTIONS ------------------------------------------
-def save_recursos(recursos: List[int], codigo_proyecto: int, db: Session) -> List[int]:
-    legajos = []
-    for legajo in recursos:
-        db_recurso = RecursoProyecto(
-            codigo_proyecto=codigo_proyecto,
-            legajo_recurso=legajo
-        )
-        db.add(db_recurso)
-        db.commit()
-        db.refresh(db_recurso)
-        legajos.append(legajo)
-    return legajos
-
-
 def save_proyecto(proyecto: ProyectoCreate, db: Session) -> Proyecto:
     db_proyecto = Proyecto(
         nombre=proyecto.nombre,
@@ -73,7 +42,6 @@ def save_proyecto(proyecto: ProyectoCreate, db: Session) -> Proyecto:
         db.add(db_proyecto)
         db.commit()
         db.refresh(db_proyecto)
-        db_proyecto.recursos = save_recursos(proyecto.recursos, db_proyecto.codigo, db)
         return db_proyecto
     except Exception as e:
         logger.error("Error al agregar el proyecto: " + str(e))
@@ -97,23 +65,15 @@ def update_proyecto(proyecto_new: ProyectoUpdate, db: Session) -> Proyecto:
         if proyecto_new.fecha_limite: proyecto_old.fecha_limite = proyecto_new.fecha_limite
         db.commit()
         db.refresh(proyecto_old)
-        if proyecto_new.recursos: proyecto_old.recursos = update_recursos(proyecto_new, db)
         return proyecto_old
     except Exception as e:
         logger.error("Error al actualizar el proyecto: " + str(e))
         raise HTTPException(status_code=500, detail="Problemas al actualizar el proyecto")
 
 
-def update_recursos(proyecto_new: ProyectoUpdate, db: Session):
-    delete_recursos(proyecto_new.codigo, db)
-    new_recursos = save_recursos(proyecto_new.recursos, proyecto_new.codigo, db)
-    return new_recursos
-
-
 # ------------------------- DELETE FUNCTIONS ------------------------------------------
 def delete_proyecto(codigo_proyecto: int, db: Session):
     try:
-        delete_recursos(codigo_proyecto, db)
         proyecto = db.query(Proyecto).filter(Proyecto.codigo == codigo_proyecto).first()
         db.delete(proyecto)
         db.commit()
@@ -123,15 +83,3 @@ def delete_proyecto(codigo_proyecto: int, db: Session):
         db.rollback()
         logger.error("Error al eliminar el proyecto: " + str(e))
         raise HTTPException(status_code=500, detail="Problemas al eliminar el proyecto")
-
-
-def delete_recursos(codigo_proyecto: int, db: Session) -> None:
-    try:
-        recursos = db.query(RecursoProyecto).filter(RecursoProyecto.codigo_proyecto == codigo_proyecto).all()
-        for recurso in recursos:
-            db.delete(recurso)
-        db.commit()
-    except Exception as e:
-        db.rollback()
-        logger.error("Error al eliminar los recursos del proyecto: " + str(e))
-        raise HTTPException(status_code=500, detail="Problemas al eliminar los recursos del proyecto")

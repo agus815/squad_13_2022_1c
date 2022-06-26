@@ -4,17 +4,11 @@ from pydantic import BaseModel, Field
 from .schemas_tareas import Tarea
 
 
-class ProyectoRecurso(BaseModel):
-    codigo_proyecto: int = Field(..., title="Código del proyecto al que el recurso fue asignado")
-    legajo_recurso: int = Field(..., title="Número de legajo del recurso asigando")
-
-
 class ProyectoBase(BaseModel):
     nombre: Optional[str] = Field('', title="Nombre del proyecto")
     tipo: Optional[str] = Field('', title="Tipo del proyecto. Puede ser implementación o desarrollo")
     estado: Optional[str] = Field('Creado', title='Estado del proyecto (creado, en desarrollo, bloqueado o finalizado)')
     fecha_limite: Optional[date] = Field(date.today(), title="Fecha límite para completar el proyecto")
-    recursos: Optional[List[int]] = Field([], title="Números de legajo de los recursos asignados")
 
 
 class ProyectoDelete(BaseModel):
