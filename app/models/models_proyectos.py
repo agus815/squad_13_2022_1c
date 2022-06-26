@@ -9,6 +9,7 @@ class Proyecto(Base):
     codigo = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     nombre = Column(String(50))
     tipo = Column(String(50))
+    estado = Column(String(50))
     fecha_limite = Column(Date)
     tareas = relationship("Tarea", cascade="all,delete,delete-orphan")
 
