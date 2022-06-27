@@ -1,6 +1,7 @@
 from asyncio.log import logger
 from typing import List
 from app.models.models_proyectos import Proyecto
+from app.models.models_tareas import Tarea
 
 from sqlalchemy.orm import Session
 
@@ -41,12 +42,20 @@ def save_proyecto(proyecto: ProyectoCreate, db: Session) -> Proyecto:
     try:
         db.add(db_proyecto)
         db.commit()
-        """db_proyecto.tareas = save_tareas(proyecto.tareas, db_proyecto.codigo, db)"""
+        db_proyecto.tareas = save_tareas(proyecto.tareas, db)
         db.refresh(db_proyecto)
         return db_proyecto
     except Exception as e:
         logger.error("Error al agregar el proyecto: " + str(e))
         raise HTTPException(status_code=500, detail="Problemas al agregar el proyecto")
+
+
+def save_tareas(tareas: List[Tarea], db: Session) -> List[Tarea]:
+    t = []
+    for tarea in tareas:
+        db.add(tarea)
+    db.commit()
+    return t
 
 
 # ------------------------- UPDATE FUNCTIONS ------------------------------------------
