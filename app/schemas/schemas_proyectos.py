@@ -9,6 +9,7 @@ class ProyectoBase(BaseModel):
     tipo: Optional[str] = Field('', title="Tipo del proyecto. Puede ser implementación o desarrollo")
     estado: Optional[str] = Field('Creado', title='Estado del proyecto (creado, en desarrollo, bloqueado o finalizado)')
     fecha_limite: Optional[date] = Field(date.today(), title="Fecha límite para completar el proyecto")
+    tareas: Optional[List[Tarea]] = Field([], title="Tareas creadas junto al proyecto")
 
 
 class ProyectoDelete(BaseModel):

@@ -41,6 +41,7 @@ def save_proyecto(proyecto: ProyectoCreate, db: Session) -> Proyecto:
     try:
         db.add(db_proyecto)
         db.commit()
+        """db_proyecto.tareas = save_tareas(proyecto.tareas, db_proyecto.codigo, db)"""
         db.refresh(db_proyecto)
         return db_proyecto
     except Exception as e:
