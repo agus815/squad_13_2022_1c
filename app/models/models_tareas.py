@@ -14,9 +14,4 @@ class Tarea(Base):
     prioridad = Column(String(50))
     fecha_inicio = Column(Date)
     fecha_fin = Column(Date)
-
-
-class RecursoTarea(Base):
-    __tablename__ = 'tareas-recurso'
-    codigo_tarea = Column(Integer, primary_key=True, nullable=False)
-    legajo_recurso = Column(Integer, nullable=False)
+    recurso = Column(Integer)

@@ -38,25 +38,20 @@ def save_proyecto(proyecto: ProyectoCreate, db: Session) -> Proyecto:
         tipo=proyecto.tipo,
         estado=proyecto.estado,
         fecha_limite=proyecto.fecha_limite,
+        tareas=list(tarea_generator(proyecto))
     )
     try:
         db.add(db_proyecto)
         db.commit()
-        db_proyecto.tareas = save_tareas(proyecto.tareas, db)
         db.refresh(db_proyecto)
         return db_proyecto
     except Exception as e:
         logger.error("Error al agregar el proyecto: " + str(e))
         raise HTTPException(status_code=500, detail="Problemas al agregar el proyecto")
 
-
-def save_tareas(tareas: List[Tarea], db: Session) -> List[Tarea]:
-    t = []
-    for tarea in tareas:
-        db.add(tarea)
-    db.commit()
-    return t
-
+def tarea_generator(proyecto: ProyectoCreate):
+    for tarea in proyecto.tareas:
+        yield Tarea(**tarea.dict())
 
 # ------------------------- UPDATE FUNCTIONS ------------------------------------------
 def update_proyecto(proyecto_new: ProyectoUpdate, db: Session) -> Proyecto:
@@ -69,10 +64,10 @@ def update_proyecto(proyecto_new: ProyectoUpdate, db: Session) -> Proyecto:
         raise HTTPException(status_code=400, detail="El nombre del proyecto ya existe")
 
     try:
-        if proyecto_new.nombre: proyecto_old.nombre = proyecto_new.nombre
-        if proyecto_new.tipo: proyecto_old.tipo = proyecto_new.tipo
-        if proyecto_new.estado: proyecto_old.estado = proyecto_new.estado
-        if proyecto_new.fecha_limite: proyecto_old.fecha_limite = proyecto_new.fecha_limite
+        if proyecto_new.nombre != None: proyecto_old.nombre = proyecto_new.nombre
+        if proyecto_new.tipo != None: proyecto_old.tipo = proyecto_new.tipo
+        if proyecto_new.estado != None: proyecto_old.estado = proyecto_new.estado
+        if proyecto_new.fecha_limite != None: proyecto_old.fecha_limite = proyecto_new.fecha_limite
         db.commit()
         db.refresh(proyecto_old)
         return proyecto_old
