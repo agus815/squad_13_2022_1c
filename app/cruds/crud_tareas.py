@@ -1,6 +1,7 @@
 from asyncio.log import logger
 from typing import List
 from app.models.models_tareas import Tarea
+from app.models.models_proyectos import Proyecto
 
 from sqlalchemy.orm import Session
 
@@ -34,6 +35,9 @@ def get_tarea(codigo: int, db: Session) -> Tarea:
 # ------------------------- SAVE FUNCTIONS ------------------------------------------
 
 def save_tarea(tarea: TareaCreate, db: Session) -> Tarea:
+    proyecto = db.query(Proyecto).filter(Proyecto.codigo == tarea.codigo_proyecto).first()
+    if not proyecto:
+        raise HTTPException(status_code=400, detail="El proyecto no existe")
     db_tarea = Tarea(**tarea.dict())
     try:
         db.add(db_tarea)

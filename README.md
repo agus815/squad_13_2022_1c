@@ -9,8 +9,14 @@ pip install -r requeriments.txt
 ```
 
 # Levantar la API
-Para levantar la API se debe ejecutar entrar a la carpeta del proyecto y ejecutar el siguiente comando
+Para levantar la API se debe entrar a la carpeta del proyecto y ejecutar el siguiente comando
 
 ```
 uvicorn app.main:app --reload
+```
+
+# Correr los tests
+Para correr los tests se debe entrar a la carpeta del proyecto y ejecutar el siguiente comando
+```
+behave
 ```
