@@ -2,12 +2,14 @@ from asyncio.log import logger
 from typing import List
 from app.models.models_proyectos import Proyecto
 from app.models.models_tareas import Tarea
+from app.cruds.crud_tareas import get_tarea, update_tarea, save_tarea, get_tareas_from_proyecto
 
 from sqlalchemy.orm import Session
 
 from fastapi import HTTPException
 
 from app.schemas.schemas_proyectos import ProyectoCreate, ProyectoUpdate
+from app.schemas.schemas_tareas import TareaCreate, TareaUpdateFromProyecto, TareaUpdate
 
 
 # ------------------------- GET FUNCTIONS ------------------------------------------
@@ -68,6 +70,27 @@ def update_proyecto(proyecto_new: ProyectoUpdate, db: Session) -> Proyecto:
         if proyecto_new.tipo != None: proyecto_old.tipo = proyecto_new.tipo
         if proyecto_new.estado != None: proyecto_old.estado = proyecto_new.estado
         if proyecto_new.fecha_limite != None: proyecto_old.fecha_limite = proyecto_new.fecha_limite
+        if len(proyecto_new.tareas) > 0 :
+            old_tareas = get_tareas_from_proyecto(proyecto_new.codigo, db)
+            for tarea in proyecto_new.tareas :
+                tarea_db = get_tarea(tarea.codigo, db)
+                if tarea_db :
+                    if tarea_db in old_tareas:
+                        tarea_new = TareaUpdate(**tarea.dict())
+                        update_tarea(tarea_new, db)
+                else:
+                    tarea_create = TareaCreate(
+                        codigo_proyecto=tarea.codigo_proyecto,
+                        nombre=tarea.nombre,
+                        descripcion=tarea.descripcion,
+                        estado=tarea.estado,
+                        duracion=tarea.duracion,
+                        prioridad=tarea.prioridad,
+                        fecha_inicio=tarea.fecha_inicio,
+                        fecha_fin=tarea.fecha_fin,
+                        recurso=tarea.recurso
+                    )
+                    save_tarea(tarea_create, db)
         db.commit()
         db.refresh(proyecto_old)
         return proyecto_old

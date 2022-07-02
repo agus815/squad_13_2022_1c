@@ -24,7 +24,11 @@ def read_tareas(db: Session = Depends(get_db)):
 
 @router.get("/{codigo}", response_model=Tarea)
 def read_tarea(codigo: int, db: Session = Depends(get_db)):
-    return get_tarea(codigo, db)
+    tarea = get_tarea(codigo, db)
+    if not tarea:
+        raise HTTPException(status_code=404, detail="La tarea no existe")
+    return tarea
+
 
 @router.get("/proyecto/{codigo_proyecto}", response_model=List[Tarea])
 def read_tareas_by_proyecto(codigo_proyecto: int, db: Session = Depends(get_db)):

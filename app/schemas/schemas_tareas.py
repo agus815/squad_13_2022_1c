@@ -28,6 +28,15 @@ class TareaUpdate(TareaBase):
     fecha_inicio: Optional[date] = Field(date.today(), title="Fecha donde se inicia la tarea")
     fecha_fin: Optional[date] = Field(date.today(), title="Fecha estimada para finalizar la tarea")
 
+class TareaUpdateFromProyecto(TareaBase):
+    codigo: Optional[int] = Field(None, title="Codigo de la tarea en la DB")
+    nombre: Optional[str] = Field(None, title="Nombre de la tarea")
+    descripcion: Optional[str] = Field(None, title="Descripcion de la tarea")
+    estado: Optional[str] = Field(None, title="Estado de la tarea")
+    duracion: Optional[int] = Field(None, title="Duracion en horas de la tarea")
+    prioridad: Optional[str] = Field(None, title="Prioridad de la tarea. Puede ser alta, media o baja")
+    fecha_inicio: Optional[date] = Field(date.today(), title="Fecha donde se inicia la tarea")
+    fecha_fin: Optional[date] = Field(date.today(), title="Fecha estimada para finalizar la tarea")
 
 class TareaCreate(TareaBase):
     pass

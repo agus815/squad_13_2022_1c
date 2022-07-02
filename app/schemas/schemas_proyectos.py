@@ -1,7 +1,7 @@
 from datetime import date
 from typing import List, Optional
 from pydantic import BaseModel, Field
-from .schemas_tareas import TareaCreate, Tarea
+from .schemas_tareas import TareaCreate, Tarea, TareaUpdateFromProyecto
 
 
 class ProyectoBase(BaseModel):
@@ -17,6 +17,7 @@ class ProyectoDelete(BaseModel):
 
 class ProyectoUpdate(ProyectoBase):
     codigo: int = Field(..., title="Codigo del proyecto en la DB")
+    tareas: Optional[List[TareaUpdateFromProyecto]] = Field([], title="Tareas creadas junto al proyecto")
 
 
 class ProyectoCreate(ProyectoBase):

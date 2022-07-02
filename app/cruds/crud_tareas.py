@@ -28,8 +28,6 @@ def get_tareas_from_proyecto(codigo_proyecto: int, db: Session) -> List[Tarea]:
 
 def get_tarea(codigo: int, db: Session) -> Tarea:
     tarea = db.query(Tarea).filter(Tarea.codigo == codigo).first()
-    if not tarea:
-        raise HTTPException(status_code=404, detail="La tarea no existe")
     return tarea
 
 
