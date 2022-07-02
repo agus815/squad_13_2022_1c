@@ -1,3 +1,7 @@
 fastapi==0.78.0
-pydantic==1.8.2
-SQLAlchemy==1.4.32
+pydantic~=1.9.1
+SQLAlchemy~=1.4.37
+asyncio~=3.4.3
+typing~=3.7.4.3
+requests~=2.25.1
+behave~=1.2.6
