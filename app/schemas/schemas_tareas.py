@@ -39,8 +39,7 @@ class TareaUpdateFromProyecto(TareaBase):
     fecha_fin: Optional[date] = Field(date.today(), title="Fecha estimada para finalizar la tarea")
 
 class TareaCreate(TareaBase):
-    pass
-
+    codigo_proyecto: Optional[int] = Field(None, title="Código del proyecto al cual la tarea pertenece")
 
 class Tarea(TareaBase):
     codigo: int = Field(..., title="Codigo de la tarea en la DB")

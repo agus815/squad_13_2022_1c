@@ -40,20 +40,24 @@ def save_proyecto(proyecto: ProyectoCreate, db: Session) -> Proyecto:
         tipo=proyecto.tipo,
         estado=proyecto.estado,
         fecha_limite=proyecto.fecha_limite,
-        tareas=list(tarea_generator(proyecto))
     )
     try:
         db.add(db_proyecto)
         db.commit()
         db.refresh(db_proyecto)
+        tareas=list(tarea_generator(proyecto, db_proyecto.codigo))
+        for tarea in tareas:
+            save_tarea(tarea, db)
         return db_proyecto
     except Exception as e:
         logger.error("Error al agregar el proyecto: " + str(e))
         raise HTTPException(status_code=500, detail="Problemas al agregar el proyecto")
 
-def tarea_generator(proyecto: ProyectoCreate):
+def tarea_generator(proyecto: ProyectoCreate, codigo_proyecto: int):
     for tarea in proyecto.tareas:
-        yield Tarea(**tarea.dict())
+        new_tarea = TareaCreate(**tarea.dict())
+        new_tarea.codigo_proyecto = codigo_proyecto
+        yield new_tarea
 
 # ------------------------- UPDATE FUNCTIONS ------------------------------------------
 def update_proyecto(proyecto_new: ProyectoUpdate, db: Session) -> Proyecto:
