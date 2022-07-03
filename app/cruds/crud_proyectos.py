@@ -2,7 +2,7 @@ from asyncio.log import logger
 from typing import List
 from app.models.models_proyectos import Proyecto
 from app.models.models_tareas import Tarea
-from app.cruds.crud_tareas import get_tarea, update_tarea, save_tarea, get_tareas_from_proyecto
+from app.cruds.crud_tareas import get_tarea, update_tarea, save_tarea, get_tareas_from_proyecto, delete_tarea
 
 from sqlalchemy.orm import Session
 
@@ -72,12 +72,14 @@ def update_proyecto(proyecto_new: ProyectoUpdate, db: Session) -> Proyecto:
         if proyecto_new.fecha_limite != None: proyecto_old.fecha_limite = proyecto_new.fecha_limite
         if len(proyecto_new.tareas) > 0 :
             old_tareas = get_tareas_from_proyecto(proyecto_new.codigo, db)
+            new_tareas = []
             for tarea in proyecto_new.tareas :
                 tarea_db = get_tarea(tarea.codigo, db)
                 if tarea_db :
                     if tarea_db in old_tareas:
                         tarea_new = TareaUpdate(**tarea.dict())
-                        update_tarea(tarea_new, db)
+                        tarea_updated = update_tarea(tarea_new, db)
+                        new_tareas.append(tarea_updated.codigo)
                 else:
                     tarea_create = TareaCreate(
                         codigo_proyecto=tarea.codigo_proyecto,
@@ -90,7 +92,11 @@ def update_proyecto(proyecto_new: ProyectoUpdate, db: Session) -> Proyecto:
                         fecha_fin=tarea.fecha_fin,
                         recurso=tarea.recurso
                     )
-                    save_tarea(tarea_create, db)
+                    tarea_saved = save_tarea(tarea_create, db)
+                    new_tareas.append(tarea_saved.codigo)
+            for tarea in old_tareas :
+                if tarea.codigo not in new_tareas:
+                    delete_tarea(tarea.codigo, db)
         db.commit()
         db.refresh(proyecto_old)
         return proyecto_old
