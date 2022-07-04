@@ -135,7 +135,7 @@ def crear_tarea(context, nombre_tarea):
         response = requests.post('https://backend-proyectos-g13.herokuapp.com/tareas/create', json={
             "codigo_proyecto": context.proyect_code,
             "nombre": nombre_tarea,
-            "descripcion": "",
+            "descripcion": "Sin descripcion",
             "estado": "Creada",
             "duracion": 7,
             "prioridad": "Baja",
@@ -171,12 +171,11 @@ def crear_tarea_con_proyecto_invalido(context):
     crear_tarea(context, "Tarea que no debe crearse")
 
 
-@given('Existe una tarea llamada "{nombre_tarea}"')
+@given('Existe una tarea llamada "{nombre_tarea}" asociada al proyecto')
 def crear_tarea_si_no_existe(context, nombre_tarea):
     response = requests.get('https://backend-proyectos-g13.herokuapp.com/tareas/')
     for tarea in response.json():
-        if tarea["nombre"] == nombre_tarea:
-            BDD_Context.save_proyect_code(context, tarea["codigo_proyecto"])
+        if (tarea["nombre"] == nombre_tarea) and (tarea["codigo_proyecto"] == context.proyect_code):
             BDD_Context.save_task_code(context, tarea["codigo"])
             return
     crear_tarea(context, nombre_tarea)
@@ -221,12 +220,12 @@ def set_tarea_que_no_existe(context):
 def modificar_tarea_que_no_existe(context, nuevo_estado):
     try:
         response = requests.post('https://backend-proyectos-g13.herokuapp.com/tareas/update', json={
-            "codigo_proyecto": 30,
+            "codigo_proyecto": context.proyect_code,
             "nombre": "Tarea que no debe existir",
-            "descripcion": "",
+            "descripcion": "Sin descripcion",
             "estado": nuevo_estado,
             "duracion": 8,
-            "prioridad": "string",
+            "prioridad": "Baja",
             "fecha_inicio": "2022-09-02",
             "fecha_fin": "2022-10-02",
             "recurso": 0,
