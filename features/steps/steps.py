@@ -150,7 +150,7 @@ def crear_tarea(context, nombre_tarea):
         BDD_Context.save_response_message(context, err.response.json()["detail"])
 
 
-@then('La lista de proyectos debera contener "{nombre_tarea}"')
+@then('La lista de tareas debera contener "{nombre_tarea}"')
 def proyecto_contiene_tarea(context, nombre_tarea):
     existe_tarea = False
     ruta = 'https://backend-proyectos-g13.herokuapp.com/tareas/proyecto/' + str(context.proyect_code)

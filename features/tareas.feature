@@ -5,7 +5,7 @@ Feature: Gestion de Tarea
     Given Existe un proyecto llamado "Proyecto PSA"
     When Se trata de crear una tarea llamada "Nueva Tarea"
     Then La solicitud sera exitosa
-    And La lista de proyectos debera contener "Nueva Tarea"
+    And La lista de tareas debera contener "Nueva Tarea"
 
   Scenario: No se puede crear una tarea de un proyecto que no existe
     Given Un proyecto que no existe
