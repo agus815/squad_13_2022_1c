@@ -22,8 +22,8 @@ Feature: Gestion de Proyecto
 
   Scenario: No se puede modificar el nombre de un proyecto a uno ya existente
     Given Existe un proyecto llamado "Proyecto PSA"
-    And Existe un proyecto llamado "Proyecto PSA 2.0"
-    When Se trata de modificar el nombre del proyecto "Proyecto PSA 2.0" a "Proyecto PSA"
+    And Existe un proyecto llamado "Proyecto PSA v2"
+    When Se trata de modificar el nombre del proyecto "Proyecto PSA v2" a "Proyecto PSA"
     Then La accion debera ser negada porque "El nombre del proyecto ya existe"
 
   #Escenarios relacionados con la eliminacion de proyectos
